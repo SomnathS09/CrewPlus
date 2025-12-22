@@ -18,7 +18,11 @@ Demo User Accounts:
 - Customer
   - username: john@example.com
   - password: customer123
-  
+
+Demo Video:
+
+[![CrewPlus retail final demo](https://img.youtube.com/vi/3uZ8uK94AWY/0.jpg)](https://www.youtube.com/watch?v=3uZ8uK94AWY "CrewPlus retail final demo")
+
 ### Documentation
 - [Software Requirements Specification (SRS)](/docs/srs.md)
 - [Technical Documentation](/docs/technical.md)
