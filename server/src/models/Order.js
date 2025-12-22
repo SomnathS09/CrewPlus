@@ -32,7 +32,8 @@ const orderSchema = new mongoose.Schema({
   orderNumber: {
     type: String,
     unique: true,
-    required: true
+    required: true,
+    default: () => `ORD-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
