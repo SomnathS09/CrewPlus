@@ -228,7 +228,7 @@ const products = [
     category: 'bread',
     price: 129,
     inventory: 50,
-    imageUrl: 'https://images.unsplash.com/photo-1573140247632-f8fd74997d5c?w=500',
+    imageUrl: 'https://images.unsplash.com/photo-1619535860434-ba1d8fa12536?w=500',
     ingredients: ['Bread', 'Garlic', 'Butter', 'Mozzarella'],
     isVegetarian: true,
     tags: ['appetizer', 'cheesy']
