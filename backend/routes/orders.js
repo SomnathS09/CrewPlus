@@ -34,8 +34,16 @@ router.post('/', [
     let total = 0;
     const orderItems = [];
 
+    // Fetch all products in a single query to avoid N+1 problem
+    const productIds = items.map(item => item.productId);
+    const products = await Product.find({ _id: { $in: productIds } });
+    
+    // Create a map for quick lookup
+    const productMap = new Map(products.map(p => [p._id.toString(), p]));
+
+    // Validate all products exist and have sufficient inventory
     for (const item of items) {
-      const product = await Product.findById(item.productId);
+      const product = productMap.get(item.productId);
       
       if (!product) {
         return res.status(404).json({ 
@@ -51,10 +59,6 @@ router.post('/', [
         });
       }
 
-      // Deduct inventory
-      product.inventory -= item.quantity;
-      await product.save();
-
       // Add to order items
       orderItems.push({
         productId: product._id,
@@ -64,6 +68,29 @@ router.post('/', [
       });
 
       total += product.price * item.quantity;
+    }
+
+    // Deduct inventory atomically to prevent race conditions
+    for (const item of items) {
+      const result = await Product.findOneAndUpdate(
+        { 
+          _id: item.productId,
+          inventory: { $gte: item.quantity } // Ensure inventory is still sufficient
+        },
+        { 
+          $inc: { inventory: -item.quantity } 
+        },
+        { new: true }
+      );
+
+      // If update failed, inventory was insufficient (race condition occurred)
+      if (!result) {
+        const product = productMap.get(item.productId);
+        return res.status(400).json({ 
+          success: false, 
+          message: `Insufficient inventory for ${product.name}. Please try again.` 
+        });
+      }
     }
 
     // Create order

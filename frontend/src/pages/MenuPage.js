@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
 import CartPage from '../components/CartPage';
 import OrderConfirmation from '../components/OrderConfirmation';
+import { ToastContainer, useToast } from '../components/Toast';
 import { menuService, cartService, orderService } from '../services/api';
 import { getSessionId } from '../utils/helpers';
 import './MenuPage.css';
@@ -14,6 +15,7 @@ const MenuPage = () => {
   const [orderConfirmation, setOrderConfirmation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { toasts, removeToast, showSuccess, showError } = useToast();
   const sessionId = getSessionId();
 
   useEffect(() => {
@@ -29,6 +31,7 @@ const MenuPage = () => {
       setError(null);
     } catch (err) {
       setError('Failed to load menu. Please try again later.');
+      showError('Failed to load menu');
       console.error('Error loading menu:', err);
     } finally {
       setLoading(false);
@@ -48,8 +51,9 @@ const MenuPage = () => {
     try {
       const response = await cartService.addToCart(sessionId, productId, quantity);
       setCart(response.data);
-      alert('Added to cart!');
+      showSuccess('Added to cart!');
     } catch (err) {
+      showError('Failed to add to cart');
       throw err;
     }
   };
@@ -66,10 +70,12 @@ const MenuPage = () => {
       setShowCart(false);
       setShowConfirmation(true);
       setCart(null);
+      showSuccess('Order placed successfully!');
       
       // Reload menu to update inventory
       await loadMenu();
     } catch (err) {
+      showError(err.message || 'Failed to place order');
       throw err;
     }
   };
@@ -151,6 +157,8 @@ const MenuPage = () => {
           onClose={() => setShowConfirmation(false)}
         />
       )}
+
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
     </div>
   );
 };

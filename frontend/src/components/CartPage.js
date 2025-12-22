@@ -19,7 +19,7 @@ const CartPage = ({ cart, onClose, onCheckout }) => {
       await onCheckout(orderType);
     } catch (error) {
       console.error('Checkout error:', error);
-      alert('Failed to place order: ' + error.message);
+      // Error will be handled by parent component with toast
     } finally {
       setLoading(false);
     }

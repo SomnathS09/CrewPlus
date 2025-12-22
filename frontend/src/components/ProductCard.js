@@ -13,7 +13,7 @@ const ProductCard = ({ product, onAddToCart }) => {
       setQuantity(1);
     } catch (error) {
       console.error('Error adding to cart:', error);
-      alert('Failed to add to cart');
+      // Error will be handled by parent component with toast
     } finally {
       setAdding(false);
     }
