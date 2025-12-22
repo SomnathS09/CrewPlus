@@ -5,7 +5,7 @@ HCL Tech Hackathon 2025
 A full-stack pizza ordering system built with React, Node.js/Express, and MongoDB.
 
 ### Documentation
-- [SRS](./docs/srs.md)
+- [SRS](/docs/srs.md)
 
 ## Features
 

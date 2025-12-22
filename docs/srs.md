@@ -36,17 +36,13 @@ This design covers architecture, components, data model, APIs, security, deploym
 
 ## **3. High-Level Architecture**
 
-TODO: Add diagrams
-
-> **Key Layers**:
-> - **Presentation Layer**: React/Next.js
-> - **Application Layer**: Express.js REST API
-> - **Data Layer**: MongoDB Atlas
-> - **Integration Layer**: SMTP (for email), GitHub Actions (CI/CD)
+![](/docs/Assets/high_level_overview.jpeg)
 
 ---
 
 ## **4. Component Architecture**
+
+![](/docs/Assets/high_level_diagram.jpeg)
 
 ### **Frontend Components**
 - `MenuPage`: Fetch & display categorized products
@@ -70,6 +66,8 @@ TODO: Add diagrams
 - Logger
 - Error handler middleware
 - API key validator
+
+![](/docs/Assets/flow_diagram.jpeg)
 
 ---
 
@@ -197,7 +195,7 @@ All endpoints require header: `x-api-key: <valid_key>`
 
 ## **10. Deployment Architecture**
 
-TODO: Add diagram
+![](/docs/Assets/deployment.jpeg)
 
 - **Frontend**: Vercel (auto-deploys from `main` branch)
 - **Backend**: Render (Node.js service, env vars for DB + API key)
@@ -221,16 +219,6 @@ TODO: Add diagram
 | **Security Test** | Postman | Missing/wrong `x-api-key` → 401 |
 | **CI/CD** | GitHub Actions | Block deploy if any test fails |
 
-
----
-
-## **Diagrams Summary**
-
-1. **High-Level Architecture** – System context (mermaid above)
-2. **Component Diagram** – Frontend + Backend modules
-3. **Data Model (ER-style)** – Collections in MongoDB
-4. **Deployment Flow** – CI/CD and cloud hosting
-5. **API Request/Response Flow** – Order placement sequence
 
 ---
 
