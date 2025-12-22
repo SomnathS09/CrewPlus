@@ -45,10 +45,10 @@ export const CartProvider = ({ children }) => {
     fetchCart();
   }, [fetchCart, isAuthenticated]);
 
-  const addToCart = async (productId, quantity = 1, size = 'medium', notes = '') => {
+  const addToCart = async (productId, quantity = 1, size = 'medium', customizations = [], notes = '') => {
     try {
       setLoading(true);
-      const response = await cartAPI.addToCart({ productId, quantity, size, notes });
+      const response = await cartAPI.addToCart({ productId, quantity, size, customizations, notes });
       setCart(response.data.cart);
       calculateItemCount(response.data.cart);
       toast.success('Added to cart!');

@@ -1,0 +1,305 @@
+.track-order-page {
+  padding: var(--spacing-3xl) 0;
+  min-height: 60vh;
+}
+
+.track-order-header {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.track-order-header h1 {
+  font-size: 2.5rem;
+  color: var(--gray-900);
+  margin-bottom: var(--spacing-sm);
+}
+
+.track-order-header p {
+  color: var(--gray-600);
+  font-size: 1.1rem;
+}
+
+.track-order-form {
+  display: flex;
+  gap: var(--spacing-md);
+  max-width: 600px;
+  margin: 0 auto var(--spacing-3xl);
+}
+
+.search-input-container {
+  flex: 1;
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  left: var(--spacing-md);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gray-400);
+  font-size: 1.2rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-md) var(--spacing-md) var(--spacing-3xl);
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  font-size: 1rem;
+  transition: all var(--transition-fast);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.1);
+}
+
+.track-order-result {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.order-tracking-card {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  padding: var(--spacing-2xl);
+}
+
+.order-tracking-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-2xl);
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.order-tracking-header h2 {
+  font-size: 1.5rem;
+  color: var(--gray-900);
+  margin-bottom: var(--spacing-xs);
+}
+
+.order-date {
+  color: var(--gray-500);
+  font-size: 0.9rem;
+}
+
+.order-type-badge {
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.order-type-badge.delivery {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.order-type-badge.carryout {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.order-progress {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-2xl);
+  padding: var(--spacing-xl) 0;
+}
+
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex: 1;
+}
+
+.step-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--gray-200);
+  color: var(--gray-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  margin-bottom: var(--spacing-sm);
+  transition: all var(--transition-normal);
+  z-index: 1;
+}
+
+.progress-step.completed .step-icon {
+  background: var(--success);
+  color: white;
+}
+
+.progress-step.current .step-icon {
+  background: var(--primary);
+  color: white;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(229, 57, 53, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(229, 57, 53, 0);
+  }
+}
+
+.step-label {
+  font-size: 0.85rem;
+  color: var(--gray-500);
+  text-align: center;
+  font-weight: 500;
+}
+
+.progress-step.completed .step-label,
+.progress-step.current .step-label {
+  color: var(--gray-900);
+}
+
+.step-line {
+  position: absolute;
+  top: 25px;
+  left: 50%;
+  width: 100%;
+  height: 3px;
+  background: var(--gray-200);
+  z-index: 0;
+}
+
+.step-line.completed {
+  background: var(--success);
+}
+
+.estimated-time {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  background: #fef3c7;
+  color: #b45309;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--spacing-xl);
+  font-weight: 500;
+}
+
+.order-items-summary {
+  background: var(--gray-50);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+}
+
+.order-items-summary h3 {
+  font-size: 1rem;
+  color: var(--gray-900);
+  margin-bottom: var(--spacing-md);
+}
+
+.order-items-summary ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.order-items-summary li {
+  display: flex;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.order-items-summary li:last-child {
+  border-bottom: none;
+}
+
+.item-qty {
+  font-weight: 600;
+  color: var(--primary);
+  min-width: 30px;
+}
+
+.item-name {
+  color: var(--gray-700);
+}
+
+.order-cancelled {
+  text-align: center;
+  padding: var(--spacing-2xl);
+}
+
+.cancelled-icon {
+  font-size: 4rem;
+  color: var(--error);
+  margin-bottom: var(--spacing-md);
+}
+
+.order-cancelled h3 {
+  font-size: 1.5rem;
+  color: var(--gray-900);
+  margin-bottom: var(--spacing-sm);
+}
+
+.order-cancelled p {
+  color: var(--gray-600);
+}
+
+.no-order-found {
+  text-align: center;
+  padding: var(--spacing-3xl);
+  background: var(--gray-50);
+  border-radius: var(--radius-xl);
+}
+
+.no-order-icon {
+  font-size: 4rem;
+  color: var(--gray-400);
+  margin-bottom: var(--spacing-md);
+}
+
+.no-order-found h3 {
+  font-size: 1.5rem;
+  color: var(--gray-900);
+  margin-bottom: var(--spacing-sm);
+}
+
+.no-order-found p {
+  color: var(--gray-600);
+}
+
+@media (max-width: 768px) {
+  .track-order-form {
+    flex-direction: column;
+  }
+
+  .order-progress {
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+
+  .progress-step {
+    flex-direction: row;
+    gap: var(--spacing-md);
+  }
+
+  .step-line {
+    display: none;
+  }
+
+  .step-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+    margin-bottom: 0;
+  }
+}

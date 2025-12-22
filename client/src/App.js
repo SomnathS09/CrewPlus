@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import Menu from './pages/Menu';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
+import TrackOrder from './pages/TrackOrder';
 
 // Auth Pages
 import Login from './pages/auth/Login';
@@ -15,12 +16,17 @@ import Register from './pages/auth/Register';
 
 // Customer Pages
 import Orders from './pages/customer/Orders';
+import OrderDetails from './pages/customer/OrderDetails';
 import Profile from './pages/customer/Profile';
 
 // Admin Pages
 import Dashboard from './pages/admin/Dashboard';
 import ManageOrders from './pages/admin/ManageOrders';
 import ManageProducts from './pages/admin/ManageProducts';
+import ManageUsers from './pages/admin/ManageUsers';
+import ManageCoupons from './pages/admin/ManageCoupons';
+import ManageCustomizations from './pages/admin/ManageCustomizations';
+import ManageInventory from './pages/admin/ManageInventory';
 
 import './App.css';
 
@@ -35,6 +41,7 @@ function App() {
           <Route path="/menu" element={<Menu />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/track" element={<TrackOrder />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
@@ -44,6 +51,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Orders />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/orders/:id"
+            element={
+              <ProtectedRoute>
+                <OrderDetails />
               </ProtectedRoute>
             }
           />
@@ -85,7 +100,31 @@ function App() {
             path="/admin/inventory"
             element={
               <ProtectedRoute requiredRole="admin">
-                <ManageProducts />
+                <ManageInventory />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/users"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <ManageUsers />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/coupons"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <ManageCoupons />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/customizations"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <ManageCustomizations />
               </ProtectedRoute>
             }
           />

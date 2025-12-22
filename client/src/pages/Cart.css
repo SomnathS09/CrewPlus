@@ -83,6 +83,21 @@
   color: var(--gray-500);
 }
 
+.item-customizations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-xs);
+}
+
+.customization-tag {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  background: var(--gray-100);
+  color: var(--gray-600);
+  border-radius: var(--radius-full);
+}
+
 .item-price {
   font-weight: 500;
   color: var(--gray-700);

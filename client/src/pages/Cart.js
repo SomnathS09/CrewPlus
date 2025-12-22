@@ -78,13 +78,22 @@ const Cart = () => {
                       Size: {item.size.charAt(0).toUpperCase() + item.size.slice(1).replace('_', ' ')}
                     </span>
                   )}
+                  {item.customizations && item.customizations.length > 0 && (
+                    <div className="item-customizations">
+                      {item.customizations.map((cust, idx) => (
+                        <span key={idx} className="customization-tag">
+                          + {cust.name}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                   {item.notes && (
                     <span className="item-notes">Note: {item.notes}</span>
                   )}
                 </div>
 
                 <div className="item-price">
-                  ₹{item.price}
+                  ₹{item.price + (item.customizationTotal || 0)}
                 </div>
 
                 <div className="item-quantity">
@@ -104,7 +113,7 @@ const Cart = () => {
                 </div>
 
                 <div className="item-total">
-                  ₹{item.price * item.quantity}
+                  ₹{(item.price + (item.customizationTotal || 0)) * item.quantity}
                 </div>
 
                 <button

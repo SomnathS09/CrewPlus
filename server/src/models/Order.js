@@ -1,6 +1,15 @@
 const mongoose = require('mongoose');
 const { ORDER_STATUS, ORDER_TYPES } = require('../config/constants');
 
+const orderCustomizationSchema = new mongoose.Schema({
+  customization: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Customization'
+  },
+  name: String,
+  price: Number
+});
+
 const orderItemSchema = new mongoose.Schema({
   product: {
     type: mongoose.Schema.Types.ObjectId,
@@ -24,6 +33,11 @@ const orderItemSchema = new mongoose.Schema({
   price: {
     type: Number,
     required: true
+  },
+  customizations: [orderCustomizationSchema],
+  customizationTotal: {
+    type: Number,
+    default: 0
   },
   notes: String
 });
@@ -58,6 +72,10 @@ const orderSchema = new mongoose.Schema({
   discount: {
     type: Number,
     default: 0
+  },
+  couponCode: {
+    type: String,
+    default: null
   },
   total: {
     type: Number,
@@ -108,8 +126,7 @@ const orderSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Indexes for efficient querying
-orderSchema.index({ orderNumber: 1 });
+// Indexes for efficient querying (orderNumber already has unique: true)
 orderSchema.index({ user: 1, createdAt: -1 });
 orderSchema.index({ status: 1 });
 orderSchema.index({ createdAt: -1 });

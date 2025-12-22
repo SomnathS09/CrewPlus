@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
-import { FiShoppingCart, FiUser, FiMenu, FiX, FiLogOut, FiSettings, FiPackage } from 'react-icons/fi';
+import { FiShoppingCart, FiUser, FiMenu, FiX, FiLogOut, FiSettings, FiPackage, FiUsers, FiTag, FiSliders } from 'react-icons/fi';
 import { GiFullPizza } from 'react-icons/gi';
 import './Navbar.css';
 
@@ -105,6 +105,27 @@ const Navbar = () => {
                         onClick={() => setShowDropdown(false)}
                       >
                         <FiPackage /> Manage Orders
+                      </Link>
+                      <Link
+                        to="/admin/users"
+                        className="dropdown-item"
+                        onClick={() => setShowDropdown(false)}
+                      >
+                        <FiUsers /> Manage Users
+                      </Link>
+                      <Link
+                        to="/admin/coupons"
+                        className="dropdown-item"
+                        onClick={() => setShowDropdown(false)}
+                      >
+                        <FiTag /> Manage Coupons
+                      </Link>
+                      <Link
+                        to="/admin/customizations"
+                        className="dropdown-item"
+                        onClick={() => setShowDropdown(false)}
+                      >
+                        <FiSliders /> Customizations
                       </Link>
                     </>
                   ) : (

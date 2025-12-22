@@ -1,5 +1,6 @@
 const Cart = require('../models/Cart');
 const Product = require('../models/Product');
+const Customization = require('../models/Customization');
 const ApiError = require('../utils/ApiError');
 const ApiResponse = require('../utils/ApiResponse');
 const asyncHandler = require('../utils/asyncHandler');
@@ -46,7 +47,7 @@ const getCart = asyncHandler(async (req, res) => {
 // @route   POST /api/cart/items
 // @access  Public (session-based) / Private (user-based)
 const addToCart = asyncHandler(async (req, res) => {
-  const { productId, quantity, size = 'medium', notes } = req.body;
+  const { productId, quantity, size = 'medium', notes, customizations = [] } = req.body;
   const userId = req.user?._id;
   const sessionId = req.headers['x-session-id'];
 
@@ -77,8 +78,28 @@ const addToCart = asyncHandler(async (req, res) => {
     price = product.prices[size];
   }
 
-  // Add item to cart
-  await cart.addItem(productId, quantity, size, price, notes);
+  // Process customizations if provided
+  let processedCustomizations = [];
+  let customizationTotal = 0;
+
+  if (customizations.length > 0) {
+    const customizationIds = customizations.map(c => c.customizationId || c);
+    const customizationDocs = await Customization.find({
+      _id: { $in: customizationIds },
+      isAvailable: true
+    });
+
+    processedCustomizations = customizationDocs.map(cust => ({
+      customization: cust._id,
+      name: cust.name,
+      price: cust.price
+    }));
+
+    customizationTotal = processedCustomizations.reduce((sum, c) => sum + c.price, 0);
+  }
+
+  // Add item to cart with customizations
+  await cart.addItem(productId, quantity, size, price, notes, processedCustomizations, customizationTotal);
 
   // Reload with populated data
   cart = await Cart.findById(cart._id).populate('items.product');

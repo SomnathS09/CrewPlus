@@ -35,5 +35,20 @@ module.exports = {
     MEDIUM: 'medium',
     LARGE: 'large',
     EXTRA_LARGE: 'extra_large'
+  },
+
+  // Coupon Types
+  COUPON_TYPES: {
+    PERCENTAGE: 'percentage',
+    FIXED: 'fixed'
+  },
+
+  // Customization Categories
+  CUSTOMIZATION_TYPES: {
+    CRUST: 'crust',
+    SAUCE: 'sauce',
+    CHEESE: 'cheese',
+    TOPPING: 'topping',
+    EXTRA: 'extra'
   }
 };

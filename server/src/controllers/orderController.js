@@ -1,16 +1,18 @@
 const Order = require('../models/Order');
 const Cart = require('../models/Cart');
 const Product = require('../models/Product');
+const Coupon = require('../models/Coupon');
 const ApiError = require('../utils/ApiError');
 const ApiResponse = require('../utils/ApiResponse');
 const asyncHandler = require('../utils/asyncHandler');
 const { ORDER_STATUS } = require('../config/constants');
+const { sendOrderConfirmationEmail, sendOrderStatusUpdateEmail } = require('../services/emailService');
 
 // @desc    Create new order
 // @route   POST /api/orders
 // @access  Public (session-based) / Private (user-based)
 const createOrder = asyncHandler(async (req, res) => {
-  const { type, customerInfo, deliveryAddress, paymentMethod, notes } = req.body;
+  const { type, customerInfo, deliveryAddress, paymentMethod, notes, couponCode } = req.body;
   const userId = req.user?._id;
   const sessionId = req.headers['x-session-id'];
 
@@ -43,6 +45,39 @@ const createOrder = asyncHandler(async (req, res) => {
   // Calculate delivery fee
   const deliveryFee = type === 'delivery' ? 50 : 0;
 
+  // Handle coupon
+  let discount = 0;
+  let appliedCoupon = null;
+
+  if (couponCode) {
+    appliedCoupon = await Coupon.findOne({ code: couponCode.toUpperCase() });
+
+    if (appliedCoupon) {
+      // Validate coupon
+      const now = new Date();
+      if (!appliedCoupon.isActive) {
+        throw ApiError.badRequest('This coupon is no longer active');
+      }
+      if (now < appliedCoupon.validFrom || now > appliedCoupon.validUntil) {
+        throw ApiError.badRequest('This coupon is not valid');
+      }
+      if (appliedCoupon.usageLimit !== null && appliedCoupon.usedCount >= appliedCoupon.usageLimit) {
+        throw ApiError.badRequest('This coupon has reached its usage limit');
+      }
+      if (userId) {
+        const userUsages = appliedCoupon.usedBy.filter(u => u.user.toString() === userId.toString());
+        if (userUsages.length >= appliedCoupon.userUsageLimit) {
+          throw ApiError.badRequest('You have already used this coupon');
+        }
+      }
+      if (cart.subtotal < appliedCoupon.minOrderAmount) {
+        throw ApiError.badRequest(`Minimum order of ₹${appliedCoupon.minOrderAmount} required`);
+      }
+
+      discount = appliedCoupon.calculateDiscount(cart.subtotal);
+    }
+  }
+
   // Create order items
   const orderItems = cart.items.map(item => ({
     product: item.product._id,
@@ -50,8 +85,13 @@ const createOrder = asyncHandler(async (req, res) => {
     quantity: item.quantity,
     size: item.size,
     price: item.price,
+    customizations: item.customizations || [],
+    customizationTotal: item.customizationTotal || 0,
     notes: item.notes
   }));
+
+  // Calculate total
+  const total = cart.total + deliveryFee - discount;
 
   // Create order
   const order = await Order.create({
@@ -61,7 +101,9 @@ const createOrder = asyncHandler(async (req, res) => {
     subtotal: cart.subtotal,
     tax: cart.tax,
     deliveryFee,
-    total: cart.total + deliveryFee,
+    discount,
+    couponCode: appliedCoupon ? appliedCoupon.code : null,
+    total: Math.max(0, total),
     type,
     customerInfo,
     deliveryAddress: type === 'delivery' ? deliveryAddress : undefined,
@@ -69,6 +111,11 @@ const createOrder = asyncHandler(async (req, res) => {
     notes,
     estimatedDelivery: new Date(Date.now() + (type === 'delivery' ? 45 : 20) * 60000)
   });
+
+  // Mark coupon as used
+  if (appliedCoupon) {
+    await appliedCoupon.markAsUsed(userId, order._id);
+  }
 
   // Deduct inventory
   for (const item of cart.items) {
@@ -82,6 +129,11 @@ const createOrder = asyncHandler(async (req, res) => {
 
   // Populate order details
   const populatedOrder = await Order.findById(order._id).populate('items.product');
+
+  // Send confirmation email (async, don't wait)
+  sendOrderConfirmationEmail(populatedOrder).catch(err => {
+    console.error('Failed to send order confirmation email:', err);
+  });
 
   ApiResponse.created({
     order: populatedOrder
@@ -222,6 +274,11 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
   }
 
   await order.save();
+
+  // Send status update email (async, don't wait)
+  sendOrderStatusUpdateEmail(order).catch(err => {
+    console.error('Failed to send order status update email:', err);
+  });
 
   ApiResponse.success({ order }, 'Order status updated').send(res);
 });

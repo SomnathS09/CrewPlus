@@ -1,5 +1,15 @@
 const mongoose = require('mongoose');
 
+const customizationItemSchema = new mongoose.Schema({
+  customization: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Customization',
+    required: true
+  },
+  name: String,
+  price: Number
+});
+
 const cartItemSchema = new mongoose.Schema({
   product: {
     type: mongoose.Schema.Types.ObjectId,
@@ -20,6 +30,11 @@ const cartItemSchema = new mongoose.Schema({
   price: {
     type: Number,
     required: true
+  },
+  customizations: [customizationItemSchema],
+  customizationTotal: {
+    type: Number,
+    default: 0
   },
   notes: {
     type: String,
@@ -63,7 +78,8 @@ cartSchema.index({ sessionId: 1 });
 // Calculate totals before saving
 cartSchema.pre('save', function(next) {
   this.subtotal = this.items.reduce((sum, item) => {
-    return sum + (item.price * item.quantity);
+    const itemTotal = (item.price + (item.customizationTotal || 0)) * item.quantity;
+    return sum + itemTotal;
   }, 0);
 
   // Calculate tax (assuming 10%)
@@ -74,15 +90,29 @@ cartSchema.pre('save', function(next) {
 });
 
 // Method to add item to cart
-cartSchema.methods.addItem = async function(productId, quantity, size, price, notes) {
-  const existingItem = this.items.find(
-    item => item.product.toString() === productId.toString() && item.size === size
-  );
+cartSchema.methods.addItem = async function(productId, quantity, size, price, notes, customizations = [], customizationTotal = 0) {
+  // Generate a customization key to compare items with same product but different customizations
+  const customizationKey = customizations.map(c => c.customization.toString()).sort().join(',');
+
+  const existingItem = this.items.find(item => {
+    const itemCustomizationKey = (item.customizations || []).map(c => c.customization.toString()).sort().join(',');
+    return item.product.toString() === productId.toString() &&
+           item.size === size &&
+           itemCustomizationKey === customizationKey;
+  });
 
   if (existingItem) {
     existingItem.quantity += quantity;
   } else {
-    this.items.push({ product: productId, quantity, size, price, notes });
+    this.items.push({
+      product: productId,
+      quantity,
+      size,
+      price,
+      notes,
+      customizations,
+      customizationTotal
+    });
   }
 
   return this.save();

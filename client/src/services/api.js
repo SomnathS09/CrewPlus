@@ -10,12 +10,18 @@ const api = axios.create({
   },
 });
 
+// Clean up old localStorage sessionId if it exists (migration from old behavior)
+if (localStorage.getItem('sessionId')) {
+  localStorage.removeItem('sessionId');
+}
+
 // Get or create session ID for guest users
+// Uses sessionStorage so cart resets on new browser session
 const getSessionId = () => {
-  let sessionId = localStorage.getItem('sessionId');
+  let sessionId = sessionStorage.getItem('guestSessionId');
   if (!sessionId) {
     sessionId = 'session_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
-    localStorage.setItem('sessionId', sessionId);
+    sessionStorage.setItem('guestSessionId', sessionId);
   }
   return sessionId;
 };
@@ -64,6 +70,7 @@ export const authAPI = {
   updateProfile: (data) => api.put('/auth/profile', data),
   changePassword: (data) => api.put('/auth/password', data),
   getAllUsers: (params) => api.get('/auth/users', { params }),
+  createUser: (data) => api.post('/auth/users', data),
   updateUserRole: (id, role) => api.put(`/auth/users/${id}/role`, { role }),
   toggleUserStatus: (id) => api.put(`/auth/users/${id}/status`),
 };
@@ -101,6 +108,26 @@ export const ordersAPI = {
   getAllOrders: (params) => api.get('/orders', { params }),
   updateOrderStatus: (id, status) => api.put(`/orders/${id}/status`, { status }),
   getAnalytics: (params) => api.get('/orders/admin/analytics', { params }),
+};
+
+// Coupons API
+export const couponsAPI = {
+  validateCoupon: (code, subtotal) => api.post('/coupons/validate', { code, subtotal }),
+  getAllCoupons: (params) => api.get('/coupons', { params }),
+  createCoupon: (data) => api.post('/coupons', data),
+  updateCoupon: (id, data) => api.put(`/coupons/${id}`, data),
+  deleteCoupon: (id) => api.delete(`/coupons/${id}`),
+  toggleCouponStatus: (id) => api.put(`/coupons/${id}/toggle`),
+};
+
+// Customizations API
+export const customizationsAPI = {
+  getCustomizations: (params) => api.get('/customizations', { params }),
+  getCustomization: (id) => api.get(`/customizations/${id}`),
+  createCustomization: (data) => api.post('/customizations', data),
+  updateCustomization: (id, data) => api.put(`/customizations/${id}`, data),
+  deleteCustomization: (id) => api.delete(`/customizations/${id}`),
+  toggleCustomization: (id) => api.put(`/customizations/${id}/toggle`),
 };
 
 export default api;

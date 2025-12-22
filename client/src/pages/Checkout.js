@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import { ordersAPI } from '../services/api';
+import { ordersAPI, couponsAPI } from '../services/api';
 import Loading from '../components/common/Loading';
 import toast from 'react-hot-toast';
-import { FiTruck, FiPackage, FiCreditCard, FiDollarSign } from 'react-icons/fi';
+import { FiTruck, FiPackage, FiCreditCard, FiDollarSign, FiTag, FiX } from 'react-icons/fi';
 import './Checkout.css';
 
 const Checkout = () => {
@@ -28,8 +28,14 @@ const Checkout = () => {
   });
   const [errors, setErrors] = useState({});
 
+  // Coupon state
+  const [couponCode, setCouponCode] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [couponLoading, setCouponLoading] = useState(false);
+
   const deliveryFee = orderType === 'delivery' ? 50 : 0;
-  const total = (cart?.total || 0) + deliveryFee;
+  const discount = appliedCoupon?.discount || 0;
+  const total = Math.max(0, (cart?.total || 0) + deliveryFee - discount);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -58,6 +64,31 @@ const Checkout = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) {
+      toast.error('Please enter a coupon code');
+      return;
+    }
+
+    setCouponLoading(true);
+    try {
+      const response = await couponsAPI.validateCoupon(couponCode, cart?.subtotal || 0);
+      setAppliedCoupon(response.data.coupon);
+      toast.success('Coupon applied successfully!');
+    } catch (error) {
+      toast.error(error.message || 'Invalid coupon code');
+      setAppliedCoupon(null);
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponCode('');
+    toast.success('Coupon removed');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -83,7 +114,8 @@ const Checkout = () => {
           phone: formData.phone
         },
         paymentMethod,
-        notes: formData.notes
+        notes: formData.notes,
+        couponCode: appliedCoupon?.code || null
       };
 
       if (orderType === 'delivery') {
@@ -97,8 +129,8 @@ const Checkout = () => {
 
       const response = await ordersAPI.createOrder(orderData);
       refreshCart();
-      toast.success('Order placed successfully!');
-      navigate(`/order-confirmation/${response.data.order.orderNumber}`);
+      toast.success(`Order placed successfully! Order #${response.data.order.orderNumber}`);
+      navigate('/orders');
     } catch (error) {
       toast.error(error.message || 'Failed to place order');
     } finally {
@@ -328,6 +360,49 @@ const Checkout = () => {
               <span>Delivery Fee</span>
               <span>{deliveryFee > 0 ? `₹${deliveryFee}` : 'Free'}</span>
             </div>
+
+            {/* Coupon Section */}
+            <div className="coupon-section">
+              {appliedCoupon ? (
+                <div className="applied-coupon">
+                  <div className="coupon-info">
+                    <FiTag className="coupon-icon" />
+                    <div>
+                      <span className="coupon-code">{appliedCoupon.code}</span>
+                      <span className="coupon-desc">{appliedCoupon.description}</span>
+                    </div>
+                  </div>
+                  <button type="button" className="remove-coupon" onClick={handleRemoveCoupon}>
+                    <FiX />
+                  </button>
+                </div>
+              ) : (
+                <div className="coupon-input-group">
+                  <input
+                    type="text"
+                    placeholder="Enter coupon code"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                    className="coupon-input"
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-outline apply-coupon-btn"
+                    onClick={handleApplyCoupon}
+                    disabled={couponLoading}
+                  >
+                    {couponLoading ? '...' : 'Apply'}
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {discount > 0 && (
+              <div className="summary-row discount">
+                <span>Discount</span>
+                <span className="discount-amount">-₹{discount.toFixed(2)}</span>
+              </div>
+            )}
 
             <div className="summary-divider"></div>
 

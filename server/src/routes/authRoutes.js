@@ -7,6 +7,7 @@ const {
   updateProfile,
   changePassword,
   getAllUsers,
+  createUser,
   updateUserRole,
   toggleUserStatus
 } = require('../controllers/authController');
@@ -30,6 +31,7 @@ router.put('/password', protect, changePasswordValidator, validate, changePasswo
 
 // Admin routes
 router.get('/users', protect, isAdmin, getAllUsers);
+router.post('/users', protect, isAdmin, registerValidator, validate, createUser);
 router.put('/users/:id/role', protect, isAdmin, updateUserRole);
 router.put('/users/:id/status', protect, isAdmin, toggleUserStatus);
 

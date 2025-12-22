@@ -182,6 +182,38 @@ const updateUserRole = asyncHandler(async (req, res) => {
   }, 'User role updated successfully').send(res);
 });
 
+// @desc    Create user (Admin only)
+// @route   POST /api/auth/users
+// @access  Private/Admin
+const createUser = asyncHandler(async (req, res) => {
+  const { name, email, password, phone, role, address } = req.body;
+
+  // Check if user already exists
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    throw ApiError.badRequest('User with this email already exists');
+  }
+
+  // Validate role
+  if (role && !Object.values(ROLES).includes(role)) {
+    throw ApiError.badRequest(`Invalid role. Must be one of: ${Object.values(ROLES).join(', ')}`);
+  }
+
+  // Create user
+  const user = await User.create({
+    name,
+    email,
+    password,
+    phone,
+    role: role || ROLES.CUSTOMER,
+    address
+  });
+
+  ApiResponse.created({
+    user: user.toPublicJSON()
+  }, 'User created successfully').send(res);
+});
+
 // @desc    Toggle user active status (Admin only)
 // @route   PUT /api/auth/users/:id/status
 // @access  Private/Admin
@@ -212,6 +244,7 @@ module.exports = {
   updateProfile,
   changePassword,
   getAllUsers,
+  createUser,
   updateUserRole,
   toggleUserStatus
 };
