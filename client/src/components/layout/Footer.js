@@ -14,7 +14,7 @@ const Footer = () => {
               <span>CrewPlus</span>
             </Link>
             <p className="footer-desc">
-              Crafting the perfect pizza experience since 2024. Fresh ingredients,
+              Crafting the perfect pizza experience since 2025. Fresh ingredients,
               authentic recipes, and a passion for great food.
             </p>
             <div className="social-links">
@@ -63,7 +63,7 @@ const Footer = () => {
               </li>
               <li>
                 <FiMail />
-                <span>contact@crewplus.com</span>
+                <span>contact@example.org</span>
               </li>
             </ul>
           </div>
