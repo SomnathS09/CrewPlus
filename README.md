@@ -8,6 +8,17 @@
 
 A full-stack pizza ordering system built with React, Node.js/Express, and MongoDB. Features include real-time order tracking, food customization, coupon system, inventory management, and comprehensive admin dashboard.
 
+Deployed Frontend Web: https://crew-plus.vercel.app
+Deployed Backend API: https://crewplus-api.onrender.com
+
+Demo User Accounts:
+- Admin
+  - username: admin@crewplus.com
+  - password: admin123
+- Customer
+  - username: john@example.com
+  - password: customer123
+  
 ### Documentation
 - [Software Requirements Specification (SRS)](/docs/srs.md)
 - [Technical Documentation](/docs/technical.md)
