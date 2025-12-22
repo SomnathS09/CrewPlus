@@ -1,0 +1,86 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  backend-test:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:6.0
+        ports:
+          - 27017:27017
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: backend/package-lock.json
+    
+    - name: Install backend dependencies
+      working-directory: ./backend
+      run: npm ci
+    
+    - name: Run backend tests
+      working-directory: ./backend
+      run: npm test
+      env:
+        MONGODB_URI: mongodb://localhost:27017/crewplus-test
+        API_KEY: test-api-key
+        NODE_ENV: test
+
+  frontend-build:
+    name: Frontend Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+    
+    - name: Install frontend dependencies
+      working-directory: ./frontend
+      run: npm ci
+    
+    - name: Build frontend
+      working-directory: ./frontend
+      run: npm run build
+      env:
+        REACT_APP_API_URL: http://localhost:3001/api
+        REACT_APP_API_KEY: test-api-key
+
+  lint:
+    name: Code Linting
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install backend dependencies
+      working-directory: ./backend
+      run: npm ci
+    
+    - name: Check backend code style
+      working-directory: ./backend
+      run: echo "Linting skipped - no linter configured yet"
+      continue-on-error: true

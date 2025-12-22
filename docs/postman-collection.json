@@ -1,0 +1,149 @@
+{
+  "info": {
+    "name": "CrewPlus Retail Portal API",
+    "description": "API collection for testing the Retail Ordering Portal",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3001/api",
+      "type": "string"
+    },
+    {
+      "key": "apiKey",
+      "value": "your-secret-api-key-here",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3001/health",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3001",
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "Get Menu",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{apiKey}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/menu",
+          "host": ["{{baseUrl}}"],
+          "path": ["menu"]
+        }
+      }
+    },
+    {
+      "name": "Add to Cart",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{apiKey}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sessionId\": \"test-session-123\",\n  \"productId\": \"<product_id_from_menu>\",\n  \"quantity\": 2\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/cart",
+          "host": ["{{baseUrl}}"],
+          "path": ["cart"]
+        }
+      }
+    },
+    {
+      "name": "Get Cart",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{apiKey}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/cart/test-session-123",
+          "host": ["{{baseUrl}}"],
+          "path": ["cart", "test-session-123"]
+        }
+      }
+    },
+    {
+      "name": "Place Order",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{apiKey}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sessionId\": \"test-session-123\",\n  \"items\": [\n    {\n      \"productId\": \"<product_id>\",\n      \"quantity\": 2\n    }\n  ],\n  \"type\": \"delivery\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/orders",
+          "host": ["{{baseUrl}}"],
+          "path": ["orders"]
+        }
+      }
+    },
+    {
+      "name": "Get Orders",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{apiKey}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/orders?sessionId=test-session-123",
+          "host": ["{{baseUrl}}"],
+          "path": ["orders"],
+          "query": [
+            {
+              "key": "sessionId",
+              "value": "test-session-123"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
