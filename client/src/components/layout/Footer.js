@@ -55,15 +55,15 @@ const Footer = () => {
             <ul>
               <li>
                 <FiMapPin />
-                <span>123 Pizza Street, Food City, FC 12345</span>
+                <span>IIT Jodhpur, N.H. 62, Nagaur Road, Karwar, Jodhpur, 342030</span>
               </li>
               <li>
                 <FiPhone />
-                <span>+1 (555) 123-4567</span>
+                <span>+1 9999999999</span>
               </li>
               <li>
                 <FiMail />
-                <span>hello@crewplus.com</span>
+                <span>contact@crewplus.com</span>
               </li>
             </ul>
           </div>
