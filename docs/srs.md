@@ -219,7 +219,7 @@ TODO: Add diagram
 | **Frontend Testing** | React Testing Library | Cart UI, product listing |
 | **E2E (Manual)** | Browser + Postman | Full user flow: browse → cart → order |
 | **Security Test** | Postman | Missing/wrong `x-api-key` → 401 |
-| **CI Gate** | GitHub Actions | Block deploy if any test fails |
+| **CI/CD** | GitHub Actions | Block deploy if any test fails |
 
 
 ---
