@@ -1,0 +1,1 @@
+- Publicly accessible [link](https://vkr012-6209160.postman.co/workspace/Vipul's-Workspace~4903e5ce-2895-4a12-899b-642b453bfeee/collection/50979904-25ed5792-11e1-4d55-a9a6-294b6eff2567?live=92oet266pj)
