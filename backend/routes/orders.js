@@ -4,6 +4,7 @@ const { body, validationResult } = require('express-validator');
 const Order = require('../models/Order');
 const Cart = require('../models/Cart');
 const Product = require('../models/Product');
+const { orderLimiter } = require('../middleware/rateLimiter');
 
 // Generate order number
 const generateOrderNumber = () => {
@@ -13,8 +14,8 @@ const generateOrderNumber = () => {
   return `ORD-${dateStr}-${random}`;
 };
 
-// POST /api/orders - Place order
-router.post('/', [
+// POST /api/orders - Place order (with stricter rate limiting)
+router.post('/', orderLimiter, [
   body('sessionId').notEmpty().withMessage('Session ID is required'),
   body('items').isArray({ min: 1 }).withMessage('Items must be a non-empty array'),
   body('type').isIn(['delivery', 'carryout']).withMessage('Type must be delivery or carryout')

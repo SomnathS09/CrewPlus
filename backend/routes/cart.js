@@ -3,6 +3,10 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const Cart = require('../models/Cart');
 const Product = require('../models/Product');
+const { cartLimiter } = require('../middleware/rateLimiter');
+
+// Apply cart-specific rate limiting
+router.use(cartLimiter);
 
 // POST /api/cart - Add/Update cart
 router.post('/', [
