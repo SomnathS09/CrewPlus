@@ -1,0 +1,222 @@
+.profile-page {
+  min-height: calc(100vh - 70px);
+  background: var(--gray-50);
+  padding: var(--spacing-2xl) 0;
+}
+
+.profile-header {
+  margin-bottom: var(--spacing-xl);
+}
+
+.profile-header h1 {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: var(--gray-900);
+  margin-bottom: var(--spacing-xs);
+}
+
+.profile-header p {
+  color: var(--gray-500);
+}
+
+.profile-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: var(--spacing-xl);
+}
+
+/* Sidebar */
+.profile-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.user-card {
+  background: var(--white);
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  text-align: center;
+}
+
+.user-avatar {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto var(--spacing-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: var(--white);
+  border-radius: 50%;
+  font-size: 2rem;
+}
+
+.user-card h3 {
+  color: var(--gray-900);
+  margin-bottom: var(--spacing-xs);
+}
+
+.user-email {
+  display: block;
+  color: var(--gray-500);
+  font-size: 0.9rem;
+  margin-bottom: var(--spacing-sm);
+}
+
+.user-role {
+  display: inline-block;
+  padding: var(--spacing-xs) var(--spacing-md);
+  background: rgba(229, 57, 53, 0.1);
+  color: var(--primary);
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.profile-nav {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: none;
+  color: var(--gray-600);
+  font-weight: 500;
+  transition: all var(--transition-fast);
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.nav-btn:last-child {
+  border-bottom: none;
+}
+
+.nav-btn:hover {
+  background: var(--gray-50);
+  color: var(--gray-900);
+}
+
+.nav-btn.active {
+  background: rgba(229, 57, 53, 0.05);
+  color: var(--primary);
+  border-left: 3px solid var(--primary);
+}
+
+/* Content */
+.profile-content {
+  min-height: 400px;
+}
+
+.profile-form {
+  background: var(--white);
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.profile-form h2 {
+  font-size: 1.25rem;
+  color: var(--gray-900);
+  margin-bottom: var(--spacing-xl);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 1rem;
+  color: var(--gray-800);
+  margin: var(--spacing-xl) 0 var(--spacing-lg);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--gray-200);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.profile-form .btn {
+  margin-top: var(--spacing-md);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .profile-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-sidebar {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .user-card {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .profile-nav {
+    flex: 2;
+    display: flex;
+    min-width: 300px;
+  }
+
+  .nav-btn {
+    flex: 1;
+    justify-content: center;
+    border-bottom: none;
+    border-right: 1px solid var(--gray-100);
+  }
+
+  .nav-btn:last-child {
+    border-right: none;
+  }
+
+  .nav-btn.active {
+    border-left: none;
+    border-bottom: 3px solid var(--primary);
+  }
+}
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-sidebar {
+    flex-direction: column;
+  }
+
+  .profile-nav {
+    flex-direction: column;
+  }
+
+  .nav-btn {
+    border-right: none;
+    border-bottom: 1px solid var(--gray-100);
+  }
+}
