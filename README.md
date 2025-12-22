@@ -6,7 +6,7 @@
 
 **HCL Tech Hackathon 2025**
 
-A full-stack pizza ordering system built with React, Node.js/Express, and MongoDB. Features include real-time order tracking, food customization, coupon system, inventory management, and comprehensive admin dashboard.
+A full-stack retail pizza & cold-drinks ordering system built with React, Node.js/Express, and MongoDB. Features include real-time order tracking, food customization, coupon system, inventory management, and comprehensive admin dashboard.
 
 Deployed Frontend Web: https://crew-plus.vercel.app
 Deployed Backend API: https://crewplus-api.onrender.com
